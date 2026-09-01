@@ -12,6 +12,12 @@ public class RepositoryConstants {
             SELECT * FROM tb_attendance_history WHERE employee_id = ?
             """;
 
+    public static final String QUERY_INSERT_ATTENDANCE =
+            """
+            INSERT INTO tb_attendance_history (employee_id, date, description, status)
+            VALUES (?, ?, ?, ?)
+            """;
+
     private RepositoryConstants() {
         throw new IllegalStateException("Utility Class");
     }

@@ -998,3 +998,4 @@ insert into tb_attendance_history (id, employee_id, date, description, status) v
 insert into tb_attendance_history (id, employee_id, date, description, status) values (998, 175, '2025-11-30', 'Duplicate invoice request', 'Open');
 insert into tb_attendance_history (id, employee_id, date, description, status) values (999, 230, '2026-01-28', 'Service cancellation inquiry', 'Resolved');
 insert into tb_attendance_history (id, employee_id, date, description, status) values (1000, 301, '2025-08-15', 'Relocation / Service transfer', 'Escalated to Tier 2');
+ALTER TABLE tb_attendance_history ALTER COLUMN id RESTART WITH 1001;
