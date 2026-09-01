@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.time.Instant;
 
@@ -14,6 +15,21 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<StandardErrorDTO> handlerResourceNotFound(ResourceNotFoundException e, HttpServletRequest request) {
+
+        HttpStatus status = HttpStatus.NOT_FOUND;
+        StandardErrorDTO err = new StandardErrorDTO(
+                Instant.now(),
+                status.value(),
+                "Resource Not Found",
+                e.getMessage(),
+                request.getRequestURI()
+        );
+
+        return ResponseEntity.status(status).body(err);
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<StandardErrorDTO> handlerNoResourceFound(NoResourceFoundException e, HttpServletRequest request) {
 
         HttpStatus status = HttpStatus.NOT_FOUND;
         StandardErrorDTO err = new StandardErrorDTO(

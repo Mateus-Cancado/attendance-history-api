@@ -18,11 +18,6 @@ public class AttendanceController {
 
     private final AttendanceService service;
 
-    @GetMapping
-    public ResponseEntity<List<AttendanceDTO>> findAll() {
-        return ResponseEntity.ok(service.findAll());
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<AttendanceDTO> findById(@PathVariable Long id) {
         return ResponseEntity.ok(service.findById(id));
