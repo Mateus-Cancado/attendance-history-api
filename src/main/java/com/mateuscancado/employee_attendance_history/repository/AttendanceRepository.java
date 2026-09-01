@@ -10,6 +10,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
+import static com.mateuscancado.employee_attendance_history.constants.RepositoryConstants.*;
+
 @Repository
 @RequiredArgsConstructor
 public class AttendanceRepository {
@@ -24,23 +26,11 @@ public class AttendanceRepository {
             AttendanceStatus.fromString(rs.getString("status"))
     ));
 
-    public List<Attendance> findAll() {
-        String sql = "SELECT * " +
-                "FROM tb_attendance_history";
-        return jdbcTemplate.query(sql, rowMapper);
-    }
-
     public Optional<Attendance> findById(Long id) {
-        String sql = "SELECT * " +
-                "FROM tb_attendance_history " +
-                "WHERE id = ?";
-        return jdbcTemplate.query(sql, rowMapper, id).stream().findFirst();
+        return jdbcTemplate.query(QUERY_FIND_BY_ID, rowMapper, id).stream().findFirst();
     }
 
     public List<Attendance> findByEmployeeId(Long employeeId) {
-        String sql = "SELECT * " +
-                "FROM tb_attendance_history " +
-                "WHERE employee_id = ?";
-        return jdbcTemplate.query(sql, rowMapper, employeeId);
+        return jdbcTemplate.query(QUERY_FIND_BY_EMPLOYEE_ID, rowMapper, employeeId);
     }
 }
