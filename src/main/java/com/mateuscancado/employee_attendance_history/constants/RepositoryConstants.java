@@ -18,6 +18,21 @@ public class RepositoryConstants {
             VALUES (?, ?, ?, ?)
             """;
 
+    public static final String QUERY_DELETE_BY_ID =
+            """
+            DELETE FROM tb_attendance_history WHERE id = ?
+            """;
+
+    public static final String QUERY_UPDATE_BY_ID =
+            """
+            UPDATE tb_attendance_history
+            SET employee_id = ?,
+                date = ?,
+                description = ?,
+                status = ?
+            WHERE id = ?
+            """;
+
     private RepositoryConstants() {
         throw new IllegalStateException("Utility Class");
     }
