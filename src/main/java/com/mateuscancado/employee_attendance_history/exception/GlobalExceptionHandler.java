@@ -6,6 +6,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -71,14 +72,14 @@ public class GlobalExceptionHandler {
 
     // Exceção default de PK duplicada (DuplicateKeyException)
     @ExceptionHandler(DuplicateKeyException.class)
-    public ResponseEntity<StandardErrorDTO> handleDuplicatedKey(DuplicateKeyException e, HttpServletRequest request) {
+    public ResponseEntity<StandardErrorDTO> handleDuplicateKey(DuplicateKeyException e, HttpServletRequest request) {
         HttpStatus status = HttpStatus.CONFLICT;
 
         StandardErrorDTO err = new StandardErrorDTO(
                 Instant.now(),
                 status.value(),
                 "Unique index or primary key violation",
-                "O registro informado já está cadastrado no sistema",
+                "ID duplicado. Já existe um registro com as mesmas credenciais no banco de dados.",
                 request.getRequestURI()
         );
 
@@ -94,6 +95,22 @@ public class GlobalExceptionHandler {
                 Instant.now(),
                 status.value(),
                 "Data Integrity Violation",
+                e.getMessage(),
+                request.getRequestURI()
+        );
+
+        return ResponseEntity.status(status).body(err);
+    }
+
+    // Exceção default de request não suportado (HttpRequestMethodNotSupportedException)
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<StandardErrorDTO> handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException e, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.METHOD_NOT_ALLOWED;
+
+        StandardErrorDTO err = new StandardErrorDTO(
+                Instant.now(),
+                status.value(),
+                "Request Method Not Supported",
                 e.getMessage(),
                 request.getRequestURI()
         );
