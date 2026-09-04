@@ -221,7 +221,7 @@ public class AttendanceRepositoryTest {
         )).thenReturn(1);
 
         // Execução
-         repository.updateById(id, attendance);
+         repository.updateById(attendance, id);
 
         // Verificação
         Mockito.verify(jdbcTemplate, Mockito.times(1))
@@ -255,7 +255,7 @@ public class AttendanceRepositoryTest {
         )).thenReturn(0);
 
         // Execução
-        Throwable error = Assertions.catchThrowable(() -> repository.updateById(id, attendance));
+        Throwable error = Assertions.catchThrowable(() -> repository.updateById(attendance, id));
 
         // Verificação
         Assertions.assertThat(error)

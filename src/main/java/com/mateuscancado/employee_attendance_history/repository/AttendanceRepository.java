@@ -19,8 +19,7 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
-import static com.mateuscancado.employee_attendance_history.constants.RepositoryConstants.QUERY_FIND_BY_EMPLOYEE_ID;
-import static com.mateuscancado.employee_attendance_history.constants.RepositoryConstants.QUERY_FIND_BY_ID;
+import static com.mateuscancado.employee_attendance_history.constants.RepositoryConstants.*;
 
 @Repository
 @RequiredArgsConstructor
@@ -40,6 +39,12 @@ public class AttendanceRepository {
     public Optional<Attendance> findById(Long id) {
         log.debug("Executando consulta para buscar atendimento por ID: {}", id);
         return jdbcTemplate.query(QUERY_FIND_BY_ID, rowMapper, id).stream().findFirst();
+    }
+
+    public boolean existsById(Long id) {
+        log.debug("Executando consulta para verificar se existe no banco, ID: {}", id);
+        Boolean exists = jdbcTemplate.queryForObject(QUERY_EXISTS_BY_ID, Boolean.class, id);
+        return Boolean.TRUE.equals(exists);
     }
 
     public List<Attendance> findByEmployeeId(Long employeeId) {
@@ -82,7 +87,7 @@ public class AttendanceRepository {
         log.debug("Atendimento ID: {} deletado com sucesso.", id);
     }
 
-    public void updateById(Long id, Attendance attendance) {
+    public void updateById(Attendance attendance, Long id) {
         log.debug("Executando atualizar atendimento por ID: {}", id);
         int rowsAffected = jdbcTemplate.update(
                 RepositoryConstants.QUERY_UPDATE_BY_ID,
