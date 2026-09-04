@@ -7,6 +7,11 @@ public class RepositoryConstants {
             SELECT * FROM tb_attendance_history WHERE id = ?
             """;
 
+    public static final String QUERY_EXISTS_BY_ID =
+            """
+            SELECT EXISTS(SELECT 1 FROM tb_attendance_history WHERE id = ?)
+            """;
+
     public static final String QUERY_FIND_BY_EMPLOYEE_ID =
             """
             SELECT * FROM tb_attendance_history WHERE employee_id = ?

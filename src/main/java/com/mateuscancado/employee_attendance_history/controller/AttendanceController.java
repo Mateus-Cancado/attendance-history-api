@@ -24,9 +24,9 @@ public class AttendanceController {
         return ResponseEntity.ok(service.findById(id));
     }
 
-    @GetMapping("/employee/{id}")
-    public ResponseEntity<List<AttendanceDTO>> findByEmployeeId(@PathVariable Long id) {
-        return ResponseEntity.ok(service.findByEmployeeId(id));
+    @GetMapping("/employee/{employeeId}")
+    public ResponseEntity<List<AttendanceDTO>> findByEmployeeId(@PathVariable Long employeeId) {
+        return ResponseEntity.ok(service.findByEmployeeId(employeeId));
     }
 
     @PostMapping
@@ -39,5 +39,17 @@ public class AttendanceController {
                 .toUri();
 
         return ResponseEntity.created(uri).body(attendanceCreated);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> update(@Valid @RequestBody AttendanceRequestDTO dto, @PathVariable Long id) {
+        service.update(dto, id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        service.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }
