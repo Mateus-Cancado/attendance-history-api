@@ -122,5 +122,5 @@ Após iniciar a aplicação:
 
 Desenvolvido por **Mateus Lima Cançado**.
 
-- [Meu GitHub](github.com/Mateus-Cancado)
-- [Meu LinkedIn](linkedin.com/in/mateus-cancado/)
+- GitHub: github.com/Mateus-Cancado
+- LinkedIn: linkedin.com/in/mateus-cancado
