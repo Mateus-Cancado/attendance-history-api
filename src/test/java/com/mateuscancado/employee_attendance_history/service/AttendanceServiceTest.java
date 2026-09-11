@@ -1,6 +1,7 @@
 package com.mateuscancado.employee_attendance_history.service;
 
 import com.mateuscancado.employee_attendance_history.dto.AttendanceDTO;
+import com.mateuscancado.employee_attendance_history.dto.AttendanceRequestDTO;
 import com.mateuscancado.employee_attendance_history.enums.AttendanceStatus;
 import com.mateuscancado.employee_attendance_history.exception.ResourceNotFoundException;
 import com.mateuscancado.employee_attendance_history.mapper.AttendanceMapper;
@@ -102,5 +103,49 @@ public class AttendanceServiceTest {
         Assertions.assertThat(result).isEmpty();
         Mockito.verify(repository, Mockito.times(1)).findByEmployeeId(employeeId);
         Mockito.verifyNoInteractions(mapper);
+    }
+
+    @Test
+    void insert_ShouldReturnAttendanceDTO_WhenSuccess() {
+        // Cenário
+        AttendanceRequestDTO requestDTO = new AttendanceRequestDTO(
+                100L,
+                LocalDate.now(),
+                "Atendimento",
+                AttendanceStatus.PENDING_CUSTOMER_RESPONSE);
+
+        Attendance entity = new Attendance(
+                null,
+                100L,
+                requestDTO.date(),
+                "Atendimento",
+                AttendanceStatus.PENDING_CUSTOMER_RESPONSE);
+
+        Attendance insertedEntity = new Attendance(
+                1L,
+                100L,
+                requestDTO.date(),
+                "Atendimento",
+                AttendanceStatus.PENDING_CUSTOMER_RESPONSE);
+
+        AttendanceDTO responseDTO = new AttendanceDTO(
+                insertedEntity.getId(),
+                insertedEntity.getEmployeeId(),
+                insertedEntity.getDate(),
+                "Atendimento",
+                AttendanceStatus.PENDING_CUSTOMER_RESPONSE);
+
+        Mockito.when(mapper.toEntity(requestDTO)).thenReturn(entity);
+        Mockito.when(repository.insert(entity)).thenReturn(insertedEntity);
+        Mockito.when(mapper.toResponse(insertedEntity)).thenReturn(responseDTO);
+
+        // Execução
+        AttendanceDTO result = service.insert(requestDTO);
+
+        // Verificação
+        Assertions.assertThat(result).isNotNull().isEqualTo(responseDTO);
+        Mockito.verify(mapper, Mockito.times(1)).toEntity(requestDTO);
+        Mockito.verify(repository, Mockito.times(1)).insert(entity);
+        Mockito.verify(mapper, Mockito.times(1)).toResponse(insertedEntity);
     }
 }
