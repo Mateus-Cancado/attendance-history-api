@@ -1,5 +1,6 @@
 package com.mateuscancado.employee_attendance_history.enums;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum AttendanceStatus {
@@ -22,6 +23,7 @@ public enum AttendanceStatus {
         return description;
     }
 
+    @JsonCreator
     public static AttendanceStatus fromString(String text) {
         if (text == null) return null;
         for (AttendanceStatus status : AttendanceStatus.values()) {
