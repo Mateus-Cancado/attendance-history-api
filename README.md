@@ -29,6 +29,8 @@ Esta aplicação fornece um CRUD completo para o histórico de atendimentos de f
 
 ```text
 com.mateuscancado.employee_attendance_history
+├── config           # Configurações da aplicação
+├── constants        # Valores fixos da aplicação
 ├── controller       # Endpoints HTTP REST da aplicação
 ├── dto              # Records para transporte de dados (Requests, Responses e Erros)
 ├── enums            # Mapeamento e conversão de status (AttendanceStatus)
@@ -73,25 +75,44 @@ com.mateuscancado.employee_attendance_history
 ## 🔧 Como Executar o Projeto
 
 1. Clone o repositório:
+```
    git clone https://github.com/Mateus-Cancado/attendance-history-api.git
-
+```
 2. Acesse a pasta do projeto:
-   cd attendance-history-api
-
+```
+    cd attendance-history-api
+```
 3. Execute a aplicação via Maven Wrapper:
+```
    ./mvnw spring-boot:run
-
+```
 4. Para rodar a suíte completa de testes unitários:
+```
    ./mvnw test
-
+```
 > 💡 **Massa de Dados para Testes:** Ao iniciar a aplicação, o banco de dados H2 é populado automaticamente via script SQL (`schema.sql` / `data.sql`) com dados de teste pré-cadastrados, permitindo testar as consultas e endpoints imediatamente.
+
+---
+
+## 📸 Demonstração da API (Swagger UI)
+
+A API conta com documentação interativa através do OpenAPI 3.0 (Swagger UI).
+
+### Visão Geral dos Endpoints
+![Visão Geral dos Endpoints](assets/swagger-overview.png)
+
+### Estrutura do DTO e Validações (@Schema) no método insert
+![Estrutura do DTO](assets/swagger-schema.png)
+
+### Execução de Requisição e Resposta HTTP 201 Created
+![Execução de Requisição](assets/swagger-response.png)
 
 ---
 
 ## 📖 Documentação & H2 Console
 
 Após iniciar a aplicação:
-* **Documentação Swagger UI:** `http://localhost:8080/swagger-ui.html`
+* **Documentação Swagger UI:** `http://localhost:8080/swagger-ui/index.html`
 * **H2 Console:** `http://localhost:8080/h2-console`
   * **JDBC URL:** `jdbc:h2:mem:attendance-db`
 
@@ -99,7 +120,7 @@ Após iniciar a aplicação:
 
 ## 👨‍💻 Autor
 
-Desenvolvido por **Mateus Cancado**.
+Desenvolvido por **Mateus Lima Cançado**.
 
-- GitHub: https://github.com/Mateus-Cancado
-- LinkedIn: https://www.linkedin.com/in/mateus-cancado/
+- [Meu GitHub](github.com/Mateus-Cancado)
+- [Meu LinkedIn](linkedin.com/in/mateus-cancado/)
