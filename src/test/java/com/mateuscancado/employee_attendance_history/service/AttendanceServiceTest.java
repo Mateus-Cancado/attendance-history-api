@@ -148,4 +148,86 @@ public class AttendanceServiceTest {
         Mockito.verify(repository, Mockito.times(1)).insert(entity);
         Mockito.verify(mapper, Mockito.times(1)).toResponse(insertedEntity);
     }
+
+    @Test
+    void update_ShouldExecuteUpdate_WhenIdExists() {
+        // Cenário
+        Long id = 1L;
+        AttendanceRequestDTO requestDTO = new AttendanceRequestDTO(
+                100L,
+                LocalDate.now(),
+                "Update atendimento",
+                AttendanceStatus.CANCELLED);
+        Attendance entity = new Attendance(
+                null,
+                requestDTO.employeeId(),
+                requestDTO.date(),
+                requestDTO.description(),
+                requestDTO.status());
+
+        Mockito.when(repository.existsById(id)).thenReturn(true);
+        Mockito.when(mapper.toEntity(requestDTO)).thenReturn(entity);
+
+        // Execução
+        service.update(requestDTO, id);
+
+        // Verificação
+        Mockito.verify(repository, Mockito.times(1)).existsById(id);
+        Mockito.verify(mapper, Mockito.times(1)).toEntity(requestDTO);
+        Mockito.verify(repository, Mockito.times(1)).updateById(entity, id);
+    }
+
+    @Test
+    void update_ShouldThrowResourceNotFoundException_WhenIdDoesNotExists() {
+        // Cenário
+        Long id = 1L;
+        AttendanceRequestDTO requestDTO = new AttendanceRequestDTO(
+                100L,
+                LocalDate.now(),
+                "Update atendimento",
+                AttendanceStatus.CANCELLED);
+
+        Mockito.when(repository.existsById(id)).thenReturn(false);
+
+        // Execução
+        Throwable error = Assertions.catchThrowable(() -> service.update(requestDTO, id));
+
+        // Verificação
+        Assertions.assertThat(error)
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessage("Falha ao atualizar: Atendimento não encontrado. ID: " + id);
+        Mockito.verify(repository, Mockito.times(1)).existsById(id);
+        Mockito.verifyNoInteractions(mapper);
+    }
+
+    @Test
+    void delete_ShouldExecuteDelete_WhenIdExists() {
+        // Cenário
+        Long id = 1L;
+        Mockito.when(repository.existsById(id)).thenReturn(true);
+
+        // Execução
+        service.delete(id);
+
+        // Verificação
+        Mockito.verify(repository, Mockito.times(1)).existsById(id);
+        Mockito.verify(repository, Mockito.times(1)).deleteById(id);
+    }
+
+    @Test
+    void delete_ShouldThrowResourceNotFoundException_WhenIdDoesNotExists() {
+        // Cenário
+        Long id = 1L;
+        Mockito.when(repository.existsById(id)).thenReturn(false);
+
+        // Execução
+        Throwable error = Assertions.catchThrowable(() -> service.delete(id));
+
+        // Verificação
+        Assertions.assertThat(error)
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessage("Falha ao deletar: Atendimento não encontrado. ID: " + id);
+        Mockito.verify(repository, Mockito.times(1)).existsById(id);
+        Mockito.verify(repository, Mockito.never()).deleteById(id);
+    }
 }
