@@ -253,4 +253,33 @@ public class AttendanceControllerTest {
         // Verificação
         Mockito.verifyNoInteractions(service);
     }
+
+    @Test
+    void delete_ShouldReturnStatus204_WhenIdExists() throws Exception {
+        // Cenário
+        Long id = 1L;
+        Mockito.doNothing().when(service).delete(id);
+
+        // Execução
+        mockMvc.perform(delete("/attendances/{id}", id))
+                .andExpect(status().isNoContent());
+
+        // Verificação
+        Mockito.verify(service, Mockito.times(1)).delete(id);
+    }
+
+    @Test
+    void delete_ShouldReturnStatus404_WhenIdDoesNotExists() throws Exception {
+        // Cenário
+        Long id = 1L;
+        Mockito.doThrow(new ResourceNotFoundException("Falha ao deletar: Atendimento não encontrado. ID: " + id))
+                .when(service).delete(id);
+
+        // Execução
+        mockMvc.perform(delete("/attendances/{id}", id))
+                .andExpect(status().isNotFound());
+
+        // Verificação
+        Mockito.verify(service, Mockito.times(1)).delete(id);
+    }
 }
