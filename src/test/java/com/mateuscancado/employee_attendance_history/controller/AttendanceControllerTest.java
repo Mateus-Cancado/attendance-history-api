@@ -17,8 +17,7 @@ import tools.jackson.databind.ObjectMapper;
 import java.time.LocalDate;
 import java.util.List;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(AttendanceController.class)
@@ -181,6 +180,74 @@ public class AttendanceControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(invalidRequestDTO))
                 .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+
+        // Verificação
+        Mockito.verifyNoInteractions(service);
+    }
+
+    @Test
+    void update_ShouldReturnStatus204_WhenIdExists() throws Exception {
+        // Cenário
+        Long id = 1L;
+        AttendanceRequestDTO requestDTO = new AttendanceRequestDTO(
+                100L,
+                LocalDate.now(),
+                "Atendimento atualizado",
+                AttendanceStatus.ESCALATED_TO_TIER_2
+        );
+
+        Mockito.doNothing().when(service).update(requestDTO, id);
+
+        // Execução
+        mockMvc.perform(put("/attendances/{id}", id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(requestDTO)))
+                .andExpect(status().isNoContent());
+
+        // Verificação
+        Mockito.verify(service, Mockito.times(1)).update(requestDTO, id);
+    }
+
+    @Test
+    void update_ShouldReturnStatus404_WhenIdDoesNotExists() throws Exception {
+        // Cenário
+        Long id = 1L;
+        AttendanceRequestDTO requestDTO = new AttendanceRequestDTO(
+                100L,
+                LocalDate.now(),
+                "Atendimento inexistente",
+                AttendanceStatus.CANCELLED
+        );
+
+        Mockito.doThrow(new ResourceNotFoundException("Falha ao atualizar: Atendimento não encontrado. ID: " + id))
+                .when(service).update(requestDTO, id);
+
+        // Execução
+        mockMvc.perform(put("/attendances/{id}", id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(requestDTO)))
+                .andExpect(status().isNotFound());
+
+        // Verificação
+        Mockito.verify(service, Mockito.times(1)).update(requestDTO, id);
+    }
+
+    @Test
+    void update_ShouldReturnStatus400_WhenInvalidDTO() throws Exception {
+        // Cenário
+        Long id = 1L;
+        AttendanceRequestDTO invalidRequestDTO = new AttendanceRequestDTO(
+                null,
+                LocalDate.now(),
+                "Request inválido",
+                AttendanceStatus.CANCELLED
+        );
+
+        // Execução
+        mockMvc.perform(put("/attendances/{id}", id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(invalidRequestDTO)))
                 .andExpect(status().isBadRequest());
 
         // Verificação
